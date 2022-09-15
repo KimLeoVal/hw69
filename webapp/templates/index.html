@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hw69</title>
+</head>
+<body>
+    <input id="first" type="text" placeholder="Введите первое число"><br>
+    <input id="second" type="text" placeholder="Введите второе число">
+    <div>
+        <button id="add" class="btn">add</button>
+        <button id="subtract" class="btn">subtract</button>
+        <button id="multiply" class="btn">multiply</button>
+        <button id="divide" class="btn">divide</button>
+    </div>
+<div>Result</div>
+<p id="p_answer">Answer:</p>
+
+
+
+<script>
+    console.log('TEEEST!!!!!')
+    async function getAdd()
+    {
+        let response =  await makeRequest("http://localhost:8000/add")
+            {#{#}
+            {#    method: 'GET',#}
+            {#    headers: {'Content-Type': 'application/json;charset=utf-8'},#}
+            {#    body: {"a": 2,#}
+            {#        "b":3#}
+            {#        }#}
+        console.log(response)
+        console.log(response.text())
+        console.log(response.json())
+        {#let data = await response#}
+        {#console.log(data[0])#}
+        let p=document.getElementById('p_answer')
+        {#p.innerText=answer#}
+    }
+    let btnAdd=document.getElementById('add')
+    {#console.log(btnAdd)#}
+    btnAdd.addEventListener('click',getAdd)
+
+    async function makeRequest(url, method='GET') {
+        let response = await fetch(url, {method});
+
+        if (response.ok) {  // нормальный ответ
+            return await response.json();
+        } else {            // ошибка
+            let error = new Error(response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }
+
+
+</script>
+</body>
+</html>

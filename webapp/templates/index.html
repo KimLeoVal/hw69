@@ -20,36 +20,44 @@
 
 <script>
     console.log('TEEEST!!!!!')
-    async function getAdd()
+    async function getResult(url)
     {
-        let response =  await makeRequest("http://localhost:8000/add")
-            {#{#}
-            {#    method: 'GET',#}
-            {#    headers: {'Content-Type': 'application/json;charset=utf-8'},#}
-            {#    body: {"a": 2,#}
-            {#        "b":3#}
-            {#        }#}
-        console.log(response)
-        console.log(response.text())
-        console.log(response.json())
-        {#let data = await response#}
-        {#console.log(data[0])#}
+        let first=document.getElementById('first')
+        let second=document.getElementById('second')
+        let a=first.value
+        let b=second.value
+        let response =  await makeRequest(`http://localhost:8000/${url}/?a=${a}&b=${b}`)
         let p=document.getElementById('p_answer')
-        {#p.innerText=answer#}
+        p.style='color:green'
+        p.innerText=response.answer
     }
     let btnAdd=document.getElementById('add')
-    {#console.log(btnAdd)#}
-    btnAdd.addEventListener('click',getAdd)
+    btnAdd.addEventListener('click',()=>getResult('add'))
+
+    let btnSubtract=document.getElementById('subtract')
+    btnSubtract.addEventListener('click',()=>getResult('subtract'))
+
+    let btnMultiply=document.getElementById('multiply')
+    btnMultiply.addEventListener('click',()=>getResult('multiply'))
+
+    let btnDivide=document.getElementById('divide')
+    btnDivide.addEventListener('click',()=>getResult('divide'))
 
     async function makeRequest(url, method='GET') {
         let response = await fetch(url, {method});
 
         if (response.ok) {  // нормальный ответ
             return await response.json();
-        } else {            // ошибка
-            let error = new Error(response.statusText);
-            error.response = response;
-            throw error;
+        }
+        else {            // ошибка
+            {#let error = new Error(response.statusText);#}
+            {#error.response = response;#}
+            {#throw error;#}
+            let p=document.getElementById('p_answer')
+            p.style='color:red'
+            let error=await response.json()
+            p.innerText=error.error
+            console.log(await response.json())
         }
     }
 

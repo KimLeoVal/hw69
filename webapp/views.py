@@ -7,13 +7,8 @@ from django.shortcuts import render
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-def chek_str(str):
-    if not str.isdigit():
-        response = JsonResponse({'error': f'{str} number not integer'})
-        response.status_code = 400
-        return response
-    else:
-        return str
+def index_view(request):
+    return render(request,'index.html')
 
 @ensure_csrf_cookie
 
@@ -101,7 +96,6 @@ def divide_numbers(request):
 
 
 
-def index_view(request):
-    return render(request,'index.html')
+
 
 

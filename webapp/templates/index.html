@@ -3,22 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>hw69</title>
+    <style>
+        .btn {
+            text-align: center;
+            text-decoration: none;
+            color: black;
+            border-radius: 5px;
+            border: solid 1px;
+            background: rgb(201, 201, 195);
+        }
+    </style>
 </head>
 <body>
 <input id="first" type="text" placeholder="Введите первое число"><br>
 <input id="second" type="text" placeholder="Введите второе число">
-<div>
-    <a href="{% url 'webapp:add' %}" id="add" style="text-decoration: none;color: black" class="btn" data-action="add">add</a>
-    <a href="{% url 'webapp:subtract' %}" id="subtract" style="text-decoration: none;color: black" class="btn"
-       data-action="subtract">subtract</a>
-    <a href="{% url 'webapp:multiply' %}" id="multiply" style="text-decoration: none;color: black" class="btn"
-       data-action="multiply">multiply</a>
-    <a href="{% url 'webapp:divide' %}" id="divide" style="text-decoration: none;color: black" class="btn"
-       data-action="divide">divide</a>
+<div style="display: flex">
+    <a href="{% url 'webapp:add' %}" id="add" class="btn" data-action="add">add</a><br>
+    <a href="{% url 'webapp:subtract' %}" id="subtract" class="btn"
+       data-action="subtract">subtract</a><br>
+    <a href="{% url 'webapp:multiply' %}" id="multiply" class="btn"
+       data-action="multiply">multiply</a><br>
+    <a href="{% url 'webapp:divide' %}" id="divide" class="btn"
+       data-action="divide">divide</a><br>
 
-{#    <button id="subtract" class="btn" data-action="subtract">subtract</button>#}
-{#    <button id="multiply" class="btn" data-action="multiply">multiply</button>#}
-{#    <button id="divide" class="btn" data-action="divide">divide</button>#}
 </div>
 <div>Result</div>
 <p id="p_answer">Answer:</p>
@@ -51,11 +58,11 @@
         let a = first.value
         let b = second.value
         console.log(a, b)
-        let body={
-            "a":a,
-            "b":b
+        let body = {
+            "a": a,
+            "b": b
         }
-        let response = await makeRequest(url,body)
+        let response = await makeRequest(url, body)
 
         let p = document.getElementById('p_answer')
         p.style = 'color:green'

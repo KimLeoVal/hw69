@@ -6,6 +6,11 @@ from django.shortcuts import render
 # Create your views here
 
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.generic import ListView, CreateView
+
+from webapp.forms import TestForm
+from webapp.models import Test
+
 
 def index_view(request):
     return render(request,'index.html')
@@ -52,6 +57,17 @@ def all_actions(request):
             answer = {"answer": c}
             return JsonResponse(answer)
 
+class TestView(ListView):
+    model = Test
+    template_name = 'index_test.html'
+    context_object_name = 'test'
+
+class CreateTest(CreateView):
+    template_name = 'create.html'
+    form_class = TestForm
+
+    def form_valid(self, form):
+        super().form_valid(form)
 
 #
 # def add_numbers(request):

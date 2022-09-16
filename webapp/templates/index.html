@@ -8,10 +8,10 @@
     <input id="first" type="text" placeholder="Введите первое число"><br>
     <input id="second" type="text" placeholder="Введите второе число">
     <div>
-        <button id="add" class="btn">add</button>
-        <button id="subtract" class="btn">subtract</button>
-        <button id="multiply" class="btn">multiply</button>
-        <button id="divide" class="btn">divide</button>
+        <button id="add" class="btn" data-action="add">add</button>
+        <button id="subtract" class="btn" data-action="subtract">subtract</button>
+        <button id="multiply" class="btn" data-action="multiply">multiply</button>
+        <button id="divide" class="btn" data-action="divide">divide</button>
     </div>
 <div>Result</div>
 <p id="p_answer">Answer:</p>
@@ -19,40 +19,70 @@
 
 
 <script>
-    console.log('TEEEST!!!!!')
-    async function getResult(url)
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+    const csrftoken = getCookie('csrftoken');
+
+    async function getResult(event)
     {
+        let action=await event.target.dataset['action']
+        console.log(action)
         let first=document.getElementById('first')
         let second=document.getElementById('second')
         let a=first.value
         let b=second.value
-        let response =  await makeRequest(`http://localhost:8000/${url}/?a=${a}&b=${b}`)
+        console.log(a,b)
+        let response =  await makeRequest(`http://localhost:8000/${action}/`,a,b)
+
         let p=document.getElementById('p_answer')
         p.style='color:green'
         p.innerText=response.answer
     }
-    let btnAdd=document.getElementById('add')
-    btnAdd.addEventListener('click',()=>getResult('add'))
+    let btnList=document.getElementsByClassName('btn')
+    for (let i=0;i<btnList.length;i++)
+        btnList[i].addEventListener('click',()=>getResult(event))
+    {#let btnAdd=document.getElementById('add')#}
+    {#btnAdd.addEventListener('click',()=>getResult(event))#}
+    {##}
+    {#let btnSubtract=document.getElementById('subtract')#}
+    {#btnSubtract.addEventListener('click',()=>getResult(event))#}
+    {##}
+    {#let btnMultiply=document.getElementById('multiply')#}
+    {#btnMultiply.addEventListener('click',()=>getResult(event))#}
+    {##}
+    {#let btnDivide=document.getElementById('divide')#}
+    {#btnDivide.addEventListener('click',()=>getResult(event))#}
 
-    let btnSubtract=document.getElementById('subtract')
-    btnSubtract.addEventListener('click',()=>getResult('subtract'))
-
-    let btnMultiply=document.getElementById('multiply')
-    btnMultiply.addEventListener('click',()=>getResult('multiply'))
-
-    let btnDivide=document.getElementById('divide')
-    btnDivide.addEventListener('click',()=>getResult('divide'))
-
-    async function makeRequest(url, method='GET') {
-        let response = await fetch(url, {method});
+    async function makeRequest(url,a,b)  {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json;charset=utf-8',
+                      'X-CSRFToken': csrftoken},
+            body:JSON.stringify(
+                {
+                    'a':a,
+                    'b':b,
+                }),
+            mode: 'same-origin'
+        });
 
         if (response.ok) {  // нормальный ответ
             return await response.json();
         }
         else {            // ошибка
-            {#let error = new Error(response.statusText);#}
-            {#error.response = response;#}
-            {#throw error;#}
             let p=document.getElementById('p_answer')
             p.style='color:red'
             let error=await response.json()

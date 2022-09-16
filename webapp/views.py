@@ -17,9 +17,11 @@ def get_token_view(request, *args, **kwargs):
         return HttpResponse()
     return HttpResponseNotAllowed('Only GET request are allowed')
 
-def add_numbers(request):
-    a = request.GET.get('a')
-    b = request.GET.get('b')
+def all_actions(request):
+    body = json.loads(request.body)
+    action = request.META.get('PATH_INFO').strip('/')
+    a = str(body.get('a'))
+    b = str(body.get('b'))
     if not a.isdigit():
         response = JsonResponse({'error': f'{a}  not integer'})
         response.status_code = 400
@@ -28,63 +30,101 @@ def add_numbers(request):
         response = JsonResponse({'error': (f'{b} not integer')})
         response.status_code = 400
         return response
-    c = int(a)+int(b)
-    answer = {"answer": c}
-    return JsonResponse(answer)
-
-def subtract_numbers(request):
-    a = request.GET.get('a')
-    b = request.GET.get('b')
-    print(a,b)
-    if not a.isdigit():
-        response = JsonResponse({'error': f'{a}  not integer'})
-        response.status_code = 400
-        return response
-    if not b.isdigit():
-        response = JsonResponse({'error': (f'{b} not integer')})
-        response.status_code = 400
-        return response
-    c = int(a)-int(b)
-    answer = {"answer": c}
-    return JsonResponse(answer)
-
-def multiply_numbers(request):
-    a = request.GET.get('a')
-    b = request.GET.get('b')
-    if not a.isdigit():
-        response = JsonResponse({'error': f'{a}  not integer'})
-        response.status_code = 400
-        return response
-    if not b.isdigit():
-        response = JsonResponse({'error': (f'{b} not integer')})
-        response.status_code = 400
-        return response
-    c = int(a)*int(b)
-    answer = {"answer": c}
-    return JsonResponse(answer)
-
-def divide_numbers(request):
-    a = request.GET.get('a')
-    b = request.GET.get('b')
-    if not a.isdigit():
-        response = JsonResponse({'error': f'{a}  not integer'})
-        response.status_code = 400
-        return response
-    if int(b)==0:
-        response = JsonResponse({'error': (' zero division error')})
-        response.status_code = 400
-        return response
-    if not b.isdigit():
-        print(b)
-        response = JsonResponse({'error': (f'{b} not integer')})
-        response.status_code = 400
-        return response
-
-    c = int(a)/int(b)
-    answer = {"answer": c}
-    return JsonResponse(answer)
+    if action=='add':
+        c = int(a) + int(b)
+        answer = {"answer": c}
+        return JsonResponse(answer)
+    if action=='subtract':
+        c = int(a) - int(b)
+        answer = {"answer": c}
+        return JsonResponse(answer)
+    if action=='multiply':
+        c = int(a) * int(b)
+        answer = {"answer": c}
+        return JsonResponse(answer)
+    if action=='divide':
+        if int(b) == 0:
+            response = JsonResponse({'error': (' zero division error')})
+            response.status_code = 400
+            return response
+        else:
+            c = int(a) / int(b)
+            answer = {"answer": c}
+            return JsonResponse(answer)
 
 
+#
+# def add_numbers(request):
+#     body=json.loads(request.body)
+#     a = body.get('a')
+#     b = body.get('b')
+#     if not a.isdigit():
+#         response = JsonResponse({'error': f'{a}  not integer'})
+#         response.status_code = 400
+#         return response
+#     if not b.isdigit():
+#         response = JsonResponse({'error': (f'{b} not integer')})
+#         response.status_code = 400
+#         return response
+#     c = int(a)+int(b)
+#     answer = {"answer": c}
+#     return JsonResponse(answer)
+#
+# def subtract_numbers(request):
+#     body = json.loads(request.body)
+#     a = body.get('a')
+#     b = body.get('b')
+#     if not a.isdigit():
+#         response = JsonResponse({'error': f'{a}  not integer'})
+#         response.status_code = 400
+#         return response
+#     if not b.isdigit():
+#         response = JsonResponse({'error': (f'{b} not integer')})
+#         response.status_code = 400
+#         return response
+#     c = int(a)-int(b)
+#     answer = {"answer": c}
+#     return JsonResponse(answer)
+#
+# def multiply_numbers(request):
+#     body = json.loads(request.body)
+#     a = body.get('a')
+#     b = body.get('b')
+#     if not a.isdigit():
+#         response = JsonResponse({'error': f'{a}  not integer'})
+#         response.status_code = 400
+#         return response
+#     if not b.isdigit():
+#         response = JsonResponse({'error': (f'{b} not integer')})
+#         response.status_code = 400
+#         return response
+#     c = int(a)*int(b)
+#     answer = {"answer": c}
+#     return JsonResponse(answer)
+#
+# def divide_numbers(request):
+#     body = json.loads(request.body)
+#     a = body.get('a')
+#     b = body.get('b')
+#     if not a.isdigit():
+#         response = JsonResponse({'error': f'{a}  not integer'})
+#         response.status_code = 400
+#         return response
+#     if int(b)==0:
+#         response = JsonResponse({'error': (' zero division error')})
+#         response.status_code = 400
+#         return response
+#     if not b.isdigit():
+#         print(b)
+#         response = JsonResponse({'error': (f'{b} not integer')})
+#         response.status_code = 400
+#         return response
+#
+#     c = int(a)/int(b)
+#     answer = {"answer": c}
+#     return JsonResponse(answer)
+#
+#
 
 
 
